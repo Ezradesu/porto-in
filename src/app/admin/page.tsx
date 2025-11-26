@@ -65,7 +65,7 @@ export default function AdminDashboard() {
 
         updatePersonalInfo({
             ...portfolioData.personalInfo,
-            name: formData.get("name") as string,
+            username: formData.get("username") as string,
             professional_title: formData.get("title") as string,
             short_description: formData.get("description") as string,
             profile_image_url: formData.get("profileImage") as string,
@@ -187,11 +187,11 @@ export default function AdminDashboard() {
                         <CardContent>
                             <form onSubmit={handlePersonalInfoSubmit} className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="name">Name</Label>
+                                    <Label htmlFor="username">Username</Label>
                                     <Input
-                                        id="name"
-                                        name="name"
-                                        defaultValue={portfolioData.personalInfo?.name}
+                                        id="username"
+                                        name="username"
+                                        defaultValue={portfolioData.personalInfo?.username}
                                         required
                                     />
                                 </div>

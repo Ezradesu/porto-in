@@ -117,7 +117,7 @@ export default function Portfolio() {
                         {/* Left side - Text content */}
                         <div className="flex-1 text-center lg:text-left">
                             <h1 className="mb-4 text-4xl lg:text-5xl font-bold">
-                                {portfolioData.personalInfo?.name}
+                                {portfolioData.personalInfo?.username}
                             </h1>
                             <p className="mb-6 text-lg lg:text-xl text-zinc-600 max-w-lg">
                                 {portfolioData.personalInfo?.professional_title}
@@ -340,7 +340,7 @@ export default function Portfolio() {
                 {/* Footer */}
                 <footer className="mt-24 border-t border-zinc-200 pt-8 text-center text-sm text-zinc-500">
                     <p>
-                        © {new Date().getFullYear()} {portfolioData.personalInfo?.name}. All rights
+                        © {new Date().getFullYear()} {portfolioData.personalInfo?.username}. All rights
                         reserved.
                     </p>
                 </footer>

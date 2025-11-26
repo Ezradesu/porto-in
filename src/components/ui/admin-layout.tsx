@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "./button";
 import Link from "next/link";
+import { supabase } from "@/supabaseClient";
 
 export default function AdminLayout({
   children,
@@ -13,12 +14,31 @@ export default function AdminLayout({
 }) {
   const { session, loading, signOut } = useAuth();
   const router = useRouter();
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loading && !session) {
       router.push("/admin/login");
     }
   }, [loading, session, router]);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      if (session?.user?.id) {
+        const { data, error } = await supabase
+          .from("personal_info")
+          .select("username")
+          .eq("user_id", session.user.id)
+          .single();
+
+        if (data?.username) {
+          setUsername(data.username);
+        }
+      }
+    };
+
+    fetchUsername();
+  }, [session]);
 
   if (loading || !session) {
     return null; // Atau bisa tambahkan spinner loading di sini
@@ -33,7 +53,7 @@ export default function AdminLayout({
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" asChild>
-              <Link href="/">View Site</Link>
+              <Link href={username ? `/${username}` : "/"}>View Site</Link>
             </Button>
             <Button variant="outline" onClick={signOut}>
               Logout

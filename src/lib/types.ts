@@ -1,8 +1,7 @@
 export interface PersonalInfo {
   id: string;
   user_id: string;
-  username?: string; // Added username field
-  name: string;
+  username: string;
   professional_title: string;
   short_description: string;
   profile_image_url: string;

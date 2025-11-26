@@ -58,7 +58,7 @@ export default function LoginPage() {
         // Sederhana dulu, cuma satu strategi
         setTimeout(() => {
           console.log("🔄 Redirecting to /admin...");
-          router.push("/");
+          router.push("/admin");
         }, 200);
       } else {
         console.error("❌ Login failed:", result.error);
