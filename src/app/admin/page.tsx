@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { usePortfolioData } from "@/lib/data";
 import type { WebsiteProject, VideoProject, BlogPost, SocialMedia } from "@/lib/types";
 import { Trash2, Plus } from "lucide-react";
-
+import { toast } from "sonner";
 export default function AdminDashboard() {
     const {
         portfolioData,
@@ -65,12 +65,12 @@ export default function AdminDashboard() {
 
         updatePersonalInfo({
             ...portfolioData.personalInfo,
-            username: formData.get("username") as string,
+            username: formData.get("name") as string,
             professional_title: formData.get("title") as string,
             short_description: formData.get("description") as string,
             profile_image_url: formData.get("profileImage") as string,
         });
-        alert("Personal information updated!");
+        toast.success("Personal information updated successfully!");
     };
 
     const handleAboutSubmit = (e: React.FormEvent) => {
@@ -83,7 +83,8 @@ export default function AdminDashboard() {
             about_text: formData.get("about") as string,
             resume_url: formData.get("resume") as string,
         });
-        alert("About information updated!");
+
+        toast.success("About section updated successfully!");
     };
 
     const handleSocialLinksSubmit = (e: React.FormEvent) => {
@@ -102,17 +103,18 @@ export default function AdminDashboard() {
         };
 
         updateSocialMedia(updatedSocial);
-        alert("Social links updated!");
+
+        toast.success("Social links updated successfully!");
     };
 
     const handleWebsiteProjectSubmit = (project: WebsiteProject) => {
         updateWebsiteProject(project);
-        alert("Project updated!");
+        toast.success("Website project updated successfully!");
     };
 
     const handleVideoProjectSubmit = (project: VideoProject) => {
         updateVideoProject(project);
-        alert("Project updated!");
+        toast.success("Video project updated successfully!");
     };
 
     const handleAddWebsiteProject = (e: React.FormEvent) => {
@@ -124,7 +126,7 @@ export default function AdminDashboard() {
             image_url: "/placeholder.svg?height=192&width=384",
             project_url: "#",
         });
-        alert("Website project added!");
+        toast.success("New website project added!");
     };
 
     const handleAddVideoProject = (e: React.FormEvent) => {
@@ -136,12 +138,11 @@ export default function AdminDashboard() {
             thumbnail_url: "/placeholder.svg?height=192&width=384",
             video_url: "#",
         });
-        alert("Video project added!");
+        toast.success("New video project added!");
     };
-
     const handleBlogSubmit = (blog: BlogPost) => {
         updateBlog(blog);
-        alert("Blog updated!");
+        toast.success("Blog updated!");
     };
 
     const handleAddBlog = (e: React.FormEvent) => {
@@ -152,7 +153,7 @@ export default function AdminDashboard() {
             blog_content: "",
             creation_date: new Date().toISOString().split("T")[0],
         });
-        alert("Blog added!");
+        toast.success("New blog added!");
     };
 
     const websiteProjects = portfolioData.websiteProjects;
@@ -415,12 +416,9 @@ export default function AdminDashboard() {
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => {
-                                                if (
-                                                    confirm(
-                                                        "Are you sure you want to delete this project?"
-                                                    )
-                                                ) {
+                                                if (confirm("Are you sure you want to delete this project?")) {
                                                     removeWebsiteProject(project.id);
+                                                    toast.success("Project deleted successfully");
                                                 }
                                             }}
                                         >

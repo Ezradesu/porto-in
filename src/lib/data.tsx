@@ -38,7 +38,7 @@ interface DataContextType {
   updateSocialMedia: (info: SocialMedia) => Promise<void>;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const API_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1`;
 const HEADERS = {
   Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
   apikey: `${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
