@@ -42,7 +42,7 @@ export default function Portfolio() {
                 {/* Navigation */}
                 <nav className="mb-16 flex items-center justify-between relative">
                     <Image
-                        src="/layer 3.svg"
+                        src="/layer-3.svg"
                         alt="Logo"
                         width={100}
                         height={100}

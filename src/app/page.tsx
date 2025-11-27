@@ -27,13 +27,13 @@ export default function LandingPage() {
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full">
         <div className="flex items-center gap-2">
           <Image
-            src="/layer 3.svg"
+            src="/layer-3.svg"
             alt="Logo"
             width={50}
             height={50}
             className="h-12 w-12"
           />
-          <span className="font-bold text-xl">PortoIn</span>
+          {/* <span className="font-bold text-xl"></span> */}
         </div>
         <div className="flex gap-4">
           <Button variant="ghost" asChild>
