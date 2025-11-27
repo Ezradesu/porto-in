@@ -35,7 +35,7 @@ export default function Portfolio() {
     return (
         <main className="relative min-h-screen w-full text-zinc-900">
             {/* Interactive Background */}
-            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
             {/* Content Container */}
             <div className="relative z-10 mx-auto max-w-4xl px-4 py-16">
                 {/* Navigation */}
@@ -278,7 +278,7 @@ export default function Portfolio() {
                                 {websiteProjects.map((project) => (
                                     <div
                                         key={project.id}
-                                        className="group overflow-hidden rounded-lg  transition-all hover:shadow-md"
+                                        className="group overflow-hidden rounded-lg transition-all hover:shadow-md"
                                     >
                                         <div className="relative h-48 w-full bg-zinc-100">
                                             <Image
@@ -288,7 +288,7 @@ export default function Portfolio() {
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
                                         </div>
-                                        <div className="p-4">
+                                        <div className="p-4 bg-zinc-50">
                                             <h3 className="mb-2 text-lg font-medium">
                                                 {project.project_title}
                                             </h3>
@@ -322,7 +322,7 @@ export default function Portfolio() {
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
                                         </div>
-                                        <div className="p-4">
+                                        <div className="p-4 bg-zinc-50">
                                             <h3 className="mb-2 text-lg font-medium">
                                                 {project.project_title}
                                             </h3>
@@ -350,7 +350,7 @@ export default function Portfolio() {
                         {portfolioData.blogPosts.map((blog) => (
                             <div
                                 key={blog.id}
-                                className="cursor-pointer rounded-lg p-4 transition-all hover:shadow-md hover:border-zinc-300"
+                                className="cursor-pointer rounded-lg p-4 transition-all bg-zinc-50 hover:shadow-md hover:border-zinc-300"
                                 onClick={() => handleBlogClick(blog)}
                             >
                                 <h3 className="text-lg font-medium hover:text-zinc-600 transition-colors">
@@ -369,7 +369,7 @@ export default function Portfolio() {
                 </section>
 
                 {/* Contact Section */}
-                <section id="contact" className="mb-16 text-center ">
+                <section id="contact" className="mb-16 text-center bg-zinc-50 py-12 ">
                     <h2 className="mb-6 text-2xl font-semibold">Get In Touch</h2>
                     <p className="mb-8 text-zinc-600">
                         Have a project in mind or just want to chat? Feel free to reach out.
