@@ -45,12 +45,8 @@ export default function Portfolio() {
         setBlogDialogOpen(true);
     };
 
-    const websiteProjects = portfolioData.websiteProjects.filter(
-        (project) => project.id === "websites"
-    );
-    const videoProjects = portfolioData.videoProjects.filter(
-        (project) => project.id === "videos"
-    );
+    const websiteProjects = portfolioData.websiteProjects;
+    const videoProjects = portfolioData.videoProjects;
 
     return (
         <main className="relative min-h-screen w-full bg-white text-zinc-900">

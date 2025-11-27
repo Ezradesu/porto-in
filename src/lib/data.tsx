@@ -18,6 +18,8 @@ import type {
 } from "@/lib/types";
 
 import { useAuth } from "@/context/AuthContext";
+import { useParams } from "next/navigation";
+import { supabase } from "@/supabaseClient";
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
@@ -35,22 +37,17 @@ interface DataContextType {
   removeBlog: (id: string) => Promise<void>;
   updatePersonalInfo: (info: PersonalInfo) => Promise<void>;
   updateAboutInfo: (info: AboutInfo) => Promise<void>;
+  addAboutInfo: (info: Omit<AboutInfo, "id" | "created_at" | "updated_at">) => Promise<void>;
   updateSocialMedia: (info: SocialMedia) => Promise<void>;
+  addSocialMedia: (info: Omit<SocialMedia, "id" | "user_id" | "created_at" | "updated_at">) => Promise<void>;
 }
 
-const API_URL = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1`;
+const API_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1` : "https://iqdjwjqyvqcudouhsknu.supabase.co/rest/v1";
 const HEADERS = {
   Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
   apikey: `${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
   "Content-Type": "application/json",
 };
-const PUBLIC_HEADERS = {
-  apikey: `${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
-  "Content-Type": "application/json",
-};
-
-import { useParams } from "next/navigation";
-import { supabase } from "@/supabaseClient";
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
@@ -72,16 +69,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
       if (username) {
         // Fetch user_id by username
+        const decodedUsername = decodeURIComponent(username);
         const { data, error } = await supabase
           .from("personal_info")
           .select("user_id")
-          .eq("username", username)
+          .eq("username", decodedUsername)
           .single();
 
         if (data) {
           targetUserId = data.user_id;
         } else {
-          console.error("User not found for username:", username);
+          console.error("User not found for username:", decodedUsername);
           return;
         }
       } else if (session?.user?.id) {
@@ -414,6 +412,34 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const addAboutInfo = async (info: Omit<AboutInfo, "id" | "created_at" | "updated_at">) => {
+    try {
+      if (!session?.user?.id) {
+        alert("You must be logged in");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("about_info")
+        .insert({
+          user_id: session.user.id,
+          about_text: info.about_text,
+          resume_url: info.resume_url,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        updatePortfolioData({ aboutInfo: data });
+      }
+    } catch (error) {
+      console.error("Failed to add about info:", error);
+      alert("Failed to add about information.");
+    }
+  };
+
   const updateSocialMedia = async (info: SocialMedia) => {
     try {
       const { error } = await supabase
@@ -436,6 +462,37 @@ export function DataProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const addSocialMedia = async (info: Omit<SocialMedia, "id" | "user_id" | "created_at" | "updated_at">) => {
+    try {
+      if (!session?.user?.id) {
+        alert("You must be logged in to add social media info");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("social_media")
+        .insert({
+          user_id: session.user.id,
+          github_url: info.github_url,
+          linkedin_url: info.linkedin_url,
+          twitter_url: info.twitter_url,
+          instagram_url: info.instagram_url,
+          email_url: info.email_url,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        updatePortfolioData({ socialMedia: data });
+      }
+    } catch (error) {
+      console.error("Failed to add social media info:", error);
+      alert("Failed to add social media information. Please try again.");
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -452,7 +509,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         removeBlog,
         updatePersonalInfo,
         updateAboutInfo,
+        addAboutInfo,
         updateSocialMedia,
+        addSocialMedia,
       }}
     >
       {children}

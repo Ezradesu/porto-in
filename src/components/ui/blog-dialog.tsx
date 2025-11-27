@@ -34,14 +34,14 @@ export default function BlogDialog({
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold mb-2">
-            {blog.title}
+            {blog.blog_title}
           </DialogTitle>
           <p className="text-sm text-zinc-500 mb-4">
-            {formatDate(blog.createdAt)}
+            {formatDate(blog.creation_date)}
           </p>
         </DialogHeader>
         <div className="prose prose-zinc max-w-none">
-          {blog.content.split("\n\n").map((paragraph, index) => (
+          {blog.blog_content.split("\n\n").map((paragraph, index) => (
             <p key={index} className="mb-4 text-zinc-700 leading-relaxed">
               {paragraph}
             </p>

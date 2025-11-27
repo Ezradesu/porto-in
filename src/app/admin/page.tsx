@@ -20,6 +20,8 @@ import { usePortfolioData } from "@/lib/data";
 import type { WebsiteProject, VideoProject, BlogPost, SocialMedia } from "@/lib/types";
 import { Trash2, Plus } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/supabaseClient";
+
 export default function AdminDashboard() {
     const {
         portfolioData,
@@ -34,8 +36,10 @@ export default function AdminDashboard() {
         addBlog,
         removeBlog,
         updatePersonalInfo,
+        addAboutInfo,
         updateAboutInfo,
         updateSocialMedia,
+        addSocialMedia,
     } = usePortfolioData();
 
     const [newProject, setNewProject] = useState<Omit<WebsiteProject, "id" | "user_id" | "created_at" | "updated_at">>({
@@ -58,6 +62,12 @@ export default function AdminDashboard() {
         creation_date: new Date().toISOString().split("T")[0],
     });
 
+    // Account Settings State
+    const [newEmail, setNewEmail] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [isUpdatingAccount, setIsUpdatingAccount] = useState(false);
+
     const handlePersonalInfoSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
@@ -65,7 +75,7 @@ export default function AdminDashboard() {
 
         updatePersonalInfo({
             ...portfolioData.personalInfo,
-            username: formData.get("name") as string,
+            username: formData.get("username") as string,
             professional_title: formData.get("title") as string,
             short_description: formData.get("description") as string,
             profile_image_url: formData.get("profileImage") as string,
@@ -76,33 +86,62 @@ export default function AdminDashboard() {
     const handleAboutSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
-        if (!portfolioData.aboutInfo) return;
 
-        updateAboutInfo({
-            ...portfolioData.aboutInfo,
-            about_text: formData.get("about") as string,
-            resume_url: formData.get("resume") as string,
-        });
+        const aboutText = formData.get("about") as string;
+        const resumeUrl = formData.get("resume") as string;
 
-        toast.success("About section updated successfully!");
+        // Hapus baris "if (!portfolioData.aboutInfo) return;" yang lama!
+
+        if (portfolioData.aboutInfo) {
+            // Jika data SUDAH ADA, lakukan UPDATE
+            updateAboutInfo({
+                ...portfolioData.aboutInfo,
+                about_text: aboutText,
+                resume_url: resumeUrl,
+            });
+        } else {
+            // Jika data BELUM ADA (null), lakukan ADD (Insert)
+            // Kita gunakan user_id kosong string dulu karena akan di-override oleh session di data.tsx
+            // Atau cast tipe data agar Typescript tidak protes
+            addAboutInfo({
+                user_id: "", // Ini akan diisi otomatis di function addAboutInfo pakai session
+                about_text: aboutText,
+                resume_url: resumeUrl,
+            });
+        }
+
+        toast.success("About information updated successfully!");
     };
 
     const handleSocialLinksSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
 
-        if (!portfolioData.socialMedia) return;
+        const githubUrl = formData.get("github_url") as string;
+        const linkedinUrl = formData.get("linkedin_url") as string;
+        const twitterUrl = formData.get("twitter_url") as string;
+        const instagramUrl = formData.get("instagram_url") as string;
+        const emailUrl = formData.get("email_url") as string;
 
-        const updatedSocial: SocialMedia = {
-            ...portfolioData.socialMedia,
-            github_url: formData.get("github_url") as string,
-            linkedin_url: formData.get("linkedin_url") as string,
-            twitter_url: formData.get("twitter_url") as string,
-            instagram_url: formData.get("instagram_url") as string,
-            email_url: formData.get("email_url") as string,
-        };
-
-        updateSocialMedia(updatedSocial);
+        if (portfolioData.socialMedia) {
+            const updatedSocial: SocialMedia = {
+                ...portfolioData.socialMedia,
+                github_url: githubUrl,
+                linkedin_url: linkedinUrl,
+                twitter_url: twitterUrl,
+                instagram_url: instagramUrl,
+                email_url: emailUrl,
+            };
+            updateSocialMedia(updatedSocial);
+        } else {
+            addSocialMedia({
+                github_url: githubUrl,
+                linkedin_url: linkedinUrl,
+                twitter_url: twitterUrl,
+                instagram_url: instagramUrl,
+                email_url: emailUrl,
+            });
+        }
 
         toast.success("Social links updated successfully!");
     };
@@ -156,6 +195,41 @@ export default function AdminDashboard() {
         toast.success("New blog added!");
     };
 
+    const handleUpdateEmail = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsUpdatingAccount(true);
+        try {
+            const { error } = await supabase.auth.updateUser({ email: newEmail });
+            if (error) throw error;
+            toast.success("Email update confirmation sent! Please check your new email.");
+            setNewEmail("");
+        } catch (error: any) {
+            toast.error(error.message || "Failed to update email");
+        } finally {
+            setIsUpdatingAccount(false);
+        }
+    };
+
+    const handleUpdatePassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (newPassword !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+        setIsUpdatingAccount(true);
+        try {
+            const { error } = await supabase.auth.updateUser({ password: newPassword });
+            if (error) throw error;
+            toast.success("Password updated successfully!");
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch (error: any) {
+            toast.error(error.message || "Failed to update password");
+        } finally {
+            setIsUpdatingAccount(false);
+        }
+    };
+
     const websiteProjects = portfolioData.websiteProjects;
     const videoProjects = portfolioData.videoProjects;
 
@@ -174,6 +248,7 @@ export default function AdminDashboard() {
                     <TabsTrigger value="websites">Websites</TabsTrigger>
                     <TabsTrigger value="videos">Videos</TabsTrigger>
                     <TabsTrigger value="blogs">Blogs</TabsTrigger>
+                    <TabsTrigger value="account">Account</TabsTrigger>
                 </TabsList>
 
                 {/* Personal Info Tab */}
@@ -801,6 +876,73 @@ export default function AdminDashboard() {
                                 </CardContent>
                             </Card>
                         ))}
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="account">
+                    <div className="grid gap-6">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Change Email</CardTitle>
+                                <CardDescription>Update your account email address</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <form onSubmit={handleUpdateEmail} className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="new-email">New Email</Label>
+                                        <Input
+                                            id="new-email"
+                                            type="email"
+                                            placeholder="Enter new email"
+                                            value={newEmail}
+                                            onChange={(e) => setNewEmail(e.target.value)}
+                                            required
+                                        />
+                                    </div>
+                                    <Button type="submit" disabled={isUpdatingAccount}>
+                                        {isUpdatingAccount ? "Updating..." : "Update Email"}
+                                    </Button>
+                                </form>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Change Password</CardTitle>
+                                <CardDescription>Update your account password</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <form onSubmit={handleUpdatePassword} className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="new-password">New Password</Label>
+                                        <Input
+                                            id="new-password"
+                                            type="password"
+                                            placeholder="Enter new password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            required
+                                            minLength={6}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="confirm-password">Confirm Password</Label>
+                                        <Input
+                                            id="confirm-password"
+                                            type="password"
+                                            placeholder="Confirm new password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            required
+                                            minLength={6}
+                                        />
+                                    </div>
+                                    <Button type="submit" disabled={isUpdatingAccount}>
+                                        {isUpdatingAccount ? "Updating..." : "Update Password"}
+                                    </Button>
+                                </form>
+                            </CardContent>
+                        </Card>
                     </div>
                 </TabsContent>
             </Tabs>
