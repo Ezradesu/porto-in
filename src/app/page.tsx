@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ParticleBackground from "@/components/ui/particle-background";
+
 
 export default function LandingPage() {
   const [username, setUsername] = useState("");
@@ -20,8 +20,8 @@ export default function LandingPage() {
   };
 
   return (
-    <main className="relative min-h-screen w-full bg-white text-zinc-900 flex flex-col">
-      <ParticleBackground />
+    <main className="relative min-h-screen w-full text-zinc-900 flex flex-col">
+      <div className="absolute inset-0 -z-10 h-full w-full bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#63e_100%)]"></div>
 
       {/* Navigation */}
       <nav className="relative z-10 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto w-full">

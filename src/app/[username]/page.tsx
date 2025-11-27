@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Github, Linkedin, Twitter, Mail, FileText, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ParticleBackground from "@/components/ui/particle-background";
+
 import BlogDialog from "@/components/ui/blog-dialog";
 import { usePortfolioData } from "@/lib/data";
 import { useAuth } from "@/context/AuthContext";
@@ -33,10 +33,9 @@ export default function Portfolio() {
     const videoProjects = portfolioData.videoProjects;
 
     return (
-        <main className="relative min-h-screen w-full bg-white text-zinc-900">
+        <main className="relative min-h-screen w-full text-zinc-900">
             {/* Interactive Background */}
-            {mounted && <ParticleBackground />}
-
+            <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[radial-gradient(#d1d5db_1px,transparent_1px)] [background-size:16px_16px]"></div>
             {/* Content Container */}
             <div className="relative z-10 mx-auto max-w-4xl px-4 py-16">
                 {/* Navigation */}
@@ -108,7 +107,7 @@ export default function Portfolio() {
 
                     {/* Mobile Menu Overlay */}
                     {isMobileMenuOpen && (
-                        <div className="absolute top-full left-0 right-0 z-50 mt-2 flex flex-col gap-4 rounded-lg border border-zinc-200 bg-white p-6 shadow-lg md:hidden">
+                        <div className="absolute top-full left-0 right-0 z-50 mt-2 flex flex-col gap-4 rounded-lg border border-zinc-200 p-6 shadow-lg md:hidden">
                             <Link
                                 href="#about"
                                 className="text-sm hover:text-zinc-500 transition-colors"
