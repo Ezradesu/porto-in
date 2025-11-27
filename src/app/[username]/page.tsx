@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ParticleBackground from "@/components/ui/particle-background";
 import BlogDialog from "@/components/ui/blog-dialog";
-import Logo from "@/components/ui/logo";
 import { usePortfolioData } from "@/lib/data";
 import { useAuth } from "@/context/AuthContext";
 import type { BlogPost } from "@/lib/types";
@@ -24,22 +23,6 @@ export default function Portfolio() {
     useEffect(() => {
         setMounted(true);
     }, []);
-
-    // Function to get the correct icon component
-    const getIconComponent = (iconName: string) => {
-        switch (iconName) {
-            case "Github":
-                return <Github className="h-5 w-5" />;
-            case "Linkedin":
-                return <Linkedin className="h-5 w-5" />;
-            case "Twitter":
-                return <Twitter className="h-5 w-5" />;
-            case "Mail":
-                return <Mail className="h-5 w-5" />;
-            default:
-                return <Mail className="h-5 w-5" />;
-        }
-    };
 
     const handleBlogClick = (blog: BlogPost) => {
         setSelectedBlog(blog);

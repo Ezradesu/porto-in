@@ -31,7 +31,7 @@ const SignupPage: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const { session, signUpNewUser } = useAuth();
+  const { signUpNewUser } = useAuth();
 
   // Test koneksi saat component mount
   useEffect(() => {

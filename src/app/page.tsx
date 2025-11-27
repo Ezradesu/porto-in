@@ -69,7 +69,7 @@ export default function LandingPage() {
             <Button type="submit">Visit</Button>
           </form>
           <p className="text-sm text-zinc-500">
-            Try searching for your friend's username to see their portfolio.
+            Try searching for your friend&apos;s username to see their portfolio.
           </p>
         </div>
       </div>

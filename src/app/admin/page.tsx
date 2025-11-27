@@ -25,7 +25,6 @@ import { supabase } from "@/supabaseClient";
 export default function AdminDashboard() {
     const {
         portfolioData,
-        updatePortfolioData,
         updateWebsiteProject,
         addWebsiteProject,
         removeWebsiteProject,
@@ -158,7 +157,7 @@ export default function AdminDashboard() {
 
     const handleAddWebsiteProject = (e: React.FormEvent) => {
         e.preventDefault();
-        addWebsiteProject(newProject as any);
+        addWebsiteProject(newProject);
         setNewProject({
             project_title: "",
             project_description: "",
@@ -170,7 +169,7 @@ export default function AdminDashboard() {
 
     const handleAddVideoProject = (e: React.FormEvent) => {
         e.preventDefault();
-        addVideoProject(newVideoProject as any);
+        addVideoProject(newVideoProject);
         setNewVideoProject({
             project_title: "",
             project_description: "",
@@ -186,7 +185,7 @@ export default function AdminDashboard() {
 
     const handleAddBlog = (e: React.FormEvent) => {
         e.preventDefault();
-        addBlog(newBlog as any);
+        addBlog(newBlog);
         setNewBlog({
             blog_title: "",
             blog_content: "",
@@ -203,8 +202,9 @@ export default function AdminDashboard() {
             if (error) throw error;
             toast.success("Email update confirmation sent! Please check your new email.");
             setNewEmail("");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to update email");
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Failed to update email";
+            toast.error(errorMessage);
         } finally {
             setIsUpdatingAccount(false);
         }
@@ -223,8 +223,9 @@ export default function AdminDashboard() {
             toast.success("Password updated successfully!");
             setNewPassword("");
             setConfirmPassword("");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to update password");
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : "Failed to update password";
+            toast.error(errorMessage);
         } finally {
             setIsUpdatingAccount(false);
         }

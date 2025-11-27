@@ -110,8 +110,7 @@ export function AuthProviderPlaceholder({
 
   const register = async (
     username: string,
-    email: string,
-    password: string
+    email: string
   ): Promise<boolean> => {
     console.log("📝 AuthContext Placeholder: Attempting registration...", {
       username,

@@ -19,7 +19,7 @@ interface AuthContextType {
     username: string
   ) => Promise<{
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: AuthError;
   }>;
   signIn: (
@@ -27,7 +27,7 @@ interface AuthContextType {
     password: string
   ) => Promise<{
     success: boolean;
-    data?: any;
+    data?: unknown;
     error?: AuthError;
   }>;
   signOut: () => Promise<void>;

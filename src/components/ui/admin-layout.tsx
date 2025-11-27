@@ -25,7 +25,7 @@ export default function AdminLayout({
   useEffect(() => {
     const fetchUsername = async () => {
       if (session?.user?.id) {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from("personal_info")
           .select("username")
           .eq("user_id", session.user.id)

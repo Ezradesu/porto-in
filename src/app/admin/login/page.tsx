@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, session } = useAuth();
+  const { signIn } = useAuth();
   const router = useRouter();
 
   // TEMPORARY: Comment ini dulu untuk stop endless redirect
