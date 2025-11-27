@@ -33,7 +33,7 @@ export default function LandingPage() {
             height={50}
             className="h-12 w-12"
           />
-          <span className="font-bold text-xl">PortofolioV2</span>
+          <span className="font-bold text-xl">PortoIn</span>
         </div>
         <div className="flex gap-4">
           <Button variant="ghost" asChild>
@@ -76,7 +76,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="relative z-10 py-8 text-center text-zinc-500 text-sm">
-        <p>© {new Date().getFullYear()} PortofolioV2. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} PortoIn. All rights reserved.</p>
       </footer>
     </main>
   );
