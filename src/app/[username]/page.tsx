@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Linkedin, Twitter, Mail, FileText } from "lucide-react";
+import { Github, Linkedin, Twitter, Mail, FileText, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ParticleBackground from "@/components/ui/particle-background";
@@ -17,6 +17,7 @@ export default function Portfolio() {
     const [mounted, setMounted] = useState(false);
     const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
     const [blogDialogOpen, setBlogDialogOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { portfolioData } = usePortfolioData();
     const { session } = useAuth();
 
@@ -56,7 +57,7 @@ export default function Portfolio() {
             {/* Content Container */}
             <div className="relative z-10 mx-auto max-w-4xl px-4 py-16">
                 {/* Navigation */}
-                <nav className="mb-16 flex items-center justify-between">
+                <nav className="mb-16 flex items-center justify-between relative">
                     <Image
                         src="/layer 3.svg"
                         alt="Logo"
@@ -64,7 +65,9 @@ export default function Portfolio() {
                         height={100}
                         className="h-32 w-32 hover:-rotate-6 transition-transform hover:scale-105"
                     />
-                    <div className="flex gap-6">
+
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex gap-6">
                         <Link
                             href="#about"
                             className="text-sm hover:text-zinc-500 transition-colors"
@@ -105,6 +108,71 @@ export default function Portfolio() {
                             </Link>
                         )}
                     </div>
+
+                    {/* Mobile Menu Button */}
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="md:hidden"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        {isMobileMenuOpen ? (
+                            <X className="h-6 w-6" />
+                        ) : (
+                            <Menu className="h-6 w-6" />
+                        )}
+                    </Button>
+
+                    {/* Mobile Menu Overlay */}
+                    {isMobileMenuOpen && (
+                        <div className="absolute top-full left-0 right-0 z-50 mt-2 flex flex-col gap-4 rounded-lg border border-zinc-200 bg-white p-6 shadow-lg md:hidden">
+                            <Link
+                                href="#about"
+                                className="text-sm hover:text-zinc-500 transition-colors"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                About
+                            </Link>
+                            <Link
+                                href="#work"
+                                className="text-sm hover:text-zinc-500 transition-colors"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Work
+                            </Link>
+                            <Link
+                                href="#blog"
+                                className="text-sm hover:text-zinc-500 transition-colors"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Blog
+                            </Link>
+                            <Link
+                                href="#contact"
+                                className="text-sm hover:text-zinc-500 transition-colors"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Contact
+                            </Link>
+                            {session ? (
+                                <Link
+                                    href="/admin"
+                                    className="text-sm font-medium text-rose-600 hover:text-rose-500 transition-colors"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    Admin
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/admin/login"
+                                    className="text-sm hover:text-zinc-500 transition-colors"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    Login
+                                </Link>
+                            )}
+                        </div>
+                    )}
                 </nav>
 
                 {/* Hero Section */}

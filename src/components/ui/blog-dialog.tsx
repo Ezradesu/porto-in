@@ -31,7 +31,7 @@ export default function BlogDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto w-[95vw] md:w-full">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold mb-2">
             {blog.blog_title}

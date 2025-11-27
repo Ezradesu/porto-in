@@ -241,7 +241,7 @@ export default function AdminDashboard() {
             </div>
 
             <Tabs defaultValue="personal">
-                <TabsList className="mb-6">
+                <TabsList className="mb-6 w-full justify-start overflow-x-auto flex-nowrap">
                     <TabsTrigger value="personal">Personal Info</TabsTrigger>
                     <TabsTrigger value="about">About</TabsTrigger>
                     <TabsTrigger value="social">Social Links</TabsTrigger>
