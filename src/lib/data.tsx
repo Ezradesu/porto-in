@@ -42,13 +42,6 @@ interface DataContextType {
   addSocialMedia: (info: Omit<SocialMedia, "id" | "user_id" | "created_at" | "updated_at">) => Promise<void>;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1` : "https://iqdjwjqyvqcudouhsknu.supabase.co/rest/v1";
-const HEADERS = {
-  Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
-  apikey: `${process.env.NEXT_PUBLIC_SUPABASE_KEY}`,
-  "Content-Type": "application/json",
-};
-
 export function DataProvider({ children }: { children: ReactNode }) {
   const { session } = useAuth();
   const params = useParams();
@@ -68,7 +61,6 @@ export function DataProvider({ children }: { children: ReactNode }) {
       let targetUserId: string | null = null;
 
       if (username) {
-        // Fetch user_id by username
         const decodedUsername = decodeURIComponent(username);
         const { data, error } = await supabase
           .from("personal_info")
@@ -78,64 +70,41 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
         if (data) {
           targetUserId = data.user_id;
-        } else {
-          console.error("User not found for username:", decodedUsername);
-          return;
+        } else if (error && error.code !== 'PGRST116') {
+          console.error("Error fetching user by username:", error);
         }
-      } else if (session?.user?.id) {
+      }
+
+      if (!targetUserId && session?.user?.id) {
         targetUserId = session.user.id;
-        // Store in sessionStorage for persistence/fallback if needed
-        sessionStorage.setItem("user_id", targetUserId);
-      } else {
-        // Fallback to sessionStorage
-        targetUserId = sessionStorage.getItem("user_id");
       }
 
       if (!targetUserId) return;
 
       try {
-        const [infoRes, aboutRes, socialRes, websiteRes, videoRes, blogRes] =
-          await Promise.all([
-            fetch(`${API_URL}/personal_info?select=*&user_id=eq.${targetUserId}`, {
-              headers: HEADERS,
-            }),
-            fetch(`${API_URL}/about_info?select=*&user_id=eq.${targetUserId}`, {
-              headers: HEADERS,
-            }),
-            fetch(`${API_URL}/social_media?select=*&user_id=eq.${targetUserId}`, {
-              headers: HEADERS,
-            }),
-            fetch(
-              `${API_URL}/website_projects?select=*&user_id=eq.${targetUserId}&order=created_at.desc`,
-              { headers: HEADERS }
-            ),
-            fetch(
-              `${API_URL}/video_projects?select=*&user_id=eq.${targetUserId}&order=created_at.desc`,
-              { headers: HEADERS }
-            ),
-            fetch(
-              `${API_URL}/blog_posts?select=*&user_id=eq.${targetUserId}&order=creation_date.desc`,
-              { headers: HEADERS }
-            ),
-          ]);
-
-        const [info, about, social, websites, videos, blogs] =
-          await Promise.all([
-            infoRes.json(),
-            aboutRes.json(),
-            socialRes.json(),
-            websiteRes.json(),
-            videoRes.json(),
-            blogRes.json(),
-          ]);
+        const [
+          { data: personalInfo },
+          { data: aboutInfo },
+          { data: socialMedia },
+          { data: websiteProjects },
+          { data: videoProjects },
+          { data: blogPosts },
+        ] = await Promise.all([
+          supabase.from("personal_info").select("*").eq("user_id", targetUserId).single(),
+          supabase.from("about_info").select("*").eq("user_id", targetUserId).single(),
+          supabase.from("social_media").select("*").eq("user_id", targetUserId).single(),
+          supabase.from("website_projects").select("*").eq("user_id", targetUserId).order('created_at', { ascending: false }),
+          supabase.from("video_projects").select("*").eq("user_id", targetUserId).order('created_at', { ascending: false }),
+          supabase.from("blog_posts").select("*").eq("user_id", targetUserId).order('creation_date', { ascending: false }),
+        ]);
 
         setPortfolioData({
-          personalInfo: info[0] || null,
-          aboutInfo: about[0] || null,
-          socialMedia: social[0] || null,
-          websiteProjects: websites || [],
-          videoProjects: videos || [],
-          blogPosts: blogs || [],
+          personalInfo: personalInfo || null,
+          aboutInfo: aboutInfo || null,
+          socialMedia: socialMedia || null,
+          websiteProjects: websiteProjects || [],
+          videoProjects: videoProjects || [],
+          blogPosts: blogPosts || [],
         });
       } catch (error) {
         console.error("Failed to fetch portfolio data:", error);
