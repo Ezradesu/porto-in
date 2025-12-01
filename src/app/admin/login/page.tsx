@@ -16,8 +16,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import Logo from "@/components/ui/logo";
 import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,19 +28,9 @@ export default function LoginPage() {
   const { signIn } = useAuth();
   const router = useRouter();
 
-  // TEMPORARY: Comment ini dulu untuk stop endless redirect
-  /*
-  useEffect(() => {
-    if (session?.user && !isLoading) {
-      console.log("✅ User sudah login, redirect ke /admin");
-      const timer = setTimeout(() => {
-        router.push("/admin");
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [session, router, isLoading]);
-  */
+  const handleBack = () => {
+    router.back();
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +41,6 @@ export default function LoginPage() {
       const result = await signIn(email, password);
 
       if (result.success) {
-        // Sederhana dulu, cuma satu strategi
         setTimeout(() => {
           router.push("/admin");
         }, 200);
@@ -68,37 +58,34 @@ export default function LoginPage() {
     }
   };
 
-  // TEMPORARY: Comment ini juga untuk debugging
-  /*
-  if (session?.user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4">
-        <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <p>Redirecting to dashboard...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  */
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4 relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-4 left-4 md:top-8 md:left-8"
+        onClick={handleBack}
+      >
+        <ArrowLeft className="h-6 w-6" />
+      </Button>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
-            <Logo className="h-12 w-12 text-zinc-900" />
+            <Image
+              src="/Layer-3.svg"
+              alt="logo"
+              className="h-32 w-32 text-zinc-900 hover:scale-110 hover:rotate-6 transition-all duration-150 ease-in-out"
+              height={100}
+              width={100}
+            />
           </div>
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-bold">Login to your account</CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin dashboard
+            Enter your credentials to access your account
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
@@ -125,14 +112,10 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
-              <p className="text-xs text-zinc-500">
-                For demo purposes, use email: <strong>admin@example.com</strong>{" "}
-                and password: <strong>admin123</strong>
-              </p>
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full mt-4" disabled={isLoading}>
               {isLoading ? "Logging in..." : "Login"}
             </Button>
             <div className="text-center text-sm text-zinc-600">

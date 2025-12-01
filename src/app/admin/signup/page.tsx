@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
 import { testSupabaseConnection, testSignupDirect } from "@/utils/supabaseTest";
@@ -37,6 +38,10 @@ const SignupPage: FC = () => {
   useEffect(() => {
     testSupabaseConnection();
   }, []);
+
+  const handleBack = () => {
+    router.back();
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -76,37 +81,27 @@ const SignupPage: FC = () => {
     }
 
     try {
-      // Test direct signup juga
       const directResult = await testSignupDirect(email.trim(), password);
 
-      // Gunakan signUpNewUser dari AuthContext
       const result = await signUpNewUser(email.trim(), password, username.trim());
 
       if (result.success) {
-        // Supabase signup berhasil
         setSuccess(
           "Account created successfully! Please check your email to verify your account."
         );
 
-        // Clear form
         setEmail("");
         setUsername("");
         setPassword("");
         setConfirmPassword("");
 
-        // Redirect ke admin page atau login page setelah beberapa detik
         setTimeout(() => {
-          // Jika langsung ke admin page (jika email confirmation disabled)
           router.push("/admin");
-          // Atau ke login page (jika perlu email confirmation)
-          // router.push("/admin/login");
         }, 2000);
       } else {
-        // Handle error dari Supabase
         if (result.error) {
           console.error("❌ Signup error:", result.error);
 
-          // Handle berbagai tipe error dari Supabase
           const errorMessage = result.error.message;
 
           if (
@@ -149,14 +144,22 @@ const SignupPage: FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 p-4 relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-4 left-4 md:top-8 md:left-8"
+        onClick={handleBack}
+      >
+        <ArrowLeft className="h-6 w-6" />
+      </Button>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
             <Image
-              src="/Layer 3.svg"
+              src="/Layer-3.svg"
               alt="logo"
-              className="h-32 w-32 text-zinc-900"
+              className="h-32 w-32 text-zinc-900 hover:scale-110 hover:rotate-6 transition-all duration-150 ease-in-out"
               height={100}
               width={100}
             />
@@ -244,7 +247,7 @@ const SignupPage: FC = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full mt-4" disabled={isLoading}>
               {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
             <div className="text-center text-sm text-zinc-600">
