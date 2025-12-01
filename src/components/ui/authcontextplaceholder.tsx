@@ -76,11 +76,6 @@ export function AuthProviderPlaceholder({
     username: string,
     password: string
   ): Promise<boolean> => {
-    console.log("🔐 AuthContext Placeholder: Attempting login...", {
-      username,
-      password: "***",
-    });
-
     // Simulate API delay
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -92,32 +87,22 @@ export function AuthProviderPlaceholder({
       setIsAuthenticated(true);
       setUser(foundUser);
       setIsLoading(false);
-      console.log("✅ Login successful:", foundUser);
       return true;
     } else {
       setIsLoading(false);
-      console.log("❌ Login failed: Invalid credentials");
       return false;
     }
   };
 
   const logout = () => {
-    console.log("🚪 AuthContext Placeholder: Logging out...");
     setIsAuthenticated(false);
     setUser(null);
-    console.log("✅ Logout successful");
   };
 
   const register = async (
     username: string,
     email: string
   ): Promise<boolean> => {
-    console.log("📝 AuthContext Placeholder: Attempting registration...", {
-      username,
-      email,
-      password: "***",
-    });
-
     // Simulate API delay
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -129,7 +114,6 @@ export function AuthProviderPlaceholder({
 
     if (existingUser) {
       setIsLoading(false);
-      console.log("❌ Registration failed: User already exists");
       return false;
     }
 
@@ -145,7 +129,6 @@ export function AuthProviderPlaceholder({
     setIsAuthenticated(true);
     setUser(newUser);
     setIsLoading(false);
-    console.log("✅ Registration successful:", newUser);
     return true;
   };
 

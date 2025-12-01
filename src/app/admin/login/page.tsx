@@ -47,17 +47,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      console.log("🔄 Attempting login with:", email, password);
-
       const result = await signIn(email, password);
-      console.log("📊 Login result:", result);
 
       if (result.success) {
-        console.log("✅ Login berhasil");
-
         // Sederhana dulu, cuma satu strategi
         setTimeout(() => {
-          console.log("🔄 Redirecting to /admin...");
           router.push("/admin");
         }, 200);
       } else {

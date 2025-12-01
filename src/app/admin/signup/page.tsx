@@ -44,14 +44,6 @@ const SignupPage: FC = () => {
     setSuccess("");
     setIsLoading(true);
 
-    // Debug logging - pindahkan ke dalam handleSubmit
-    console.log("📝 Form submission data:", {
-      email,
-      passwordLength: password.length,
-      username,
-      confirmPasswordLength: confirmPassword.length,
-    });
-
     // Basic validation
     if (!email.trim()) {
       setError("Email is required");
@@ -84,17 +76,11 @@ const SignupPage: FC = () => {
     }
 
     try {
-      console.log("🔄 Calling signUpNewUser...");
-
       // Test direct signup juga
-      console.log("🧪 Testing direct signup...");
       const directResult = await testSignupDirect(email.trim(), password);
-      console.log("📊 Direct signup result:", directResult);
 
       // Gunakan signUpNewUser dari AuthContext
       const result = await signUpNewUser(email.trim(), password, username.trim());
-
-      console.log("📋 Signup result:", result);
 
       if (result.success) {
         // Supabase signup berhasil
@@ -200,7 +186,6 @@ const SignupPage: FC = () => {
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => {
-                  console.log("📧 Email changed:", e.target.value);
                   setEmail(e.target.value);
                 }}
                 required
@@ -214,7 +199,6 @@ const SignupPage: FC = () => {
                 placeholder="Choose a username"
                 value={username}
                 onChange={(e) => {
-                  console.log("👤 Username changed:", e.target.value);
                   setUsername(e.target.value);
                 }}
                 required
@@ -233,10 +217,6 @@ const SignupPage: FC = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => {
-                  console.log(
-                    "🔒 Password changed, length:",
-                    e.target.value.length
-                  );
                   setPassword(e.target.value);
                 }}
                 required
@@ -255,10 +235,6 @@ const SignupPage: FC = () => {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => {
-                  console.log(
-                    "🔒 Confirm password changed, length:",
-                    e.target.value.length
-                  );
                   setConfirmPassword(e.target.value);
                 }}
                 required

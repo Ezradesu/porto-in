@@ -10,7 +10,6 @@ export default function TestAuth() {
   const [result, setResult] = useState("");
 
   const testSignup = async () => {
-    console.log("🧪 Testing signup...");
     setResult("Testing signup...");
 
     try {
@@ -19,7 +18,6 @@ export default function TestAuth() {
         password,
       });
 
-      console.log("Signup result:", { data, error });
       setResult(`Signup: ${error ? `Error: ${error.message}` : "Success!"}`);
     } catch (err) {
       console.error("Signup catch:", err);
@@ -28,7 +26,6 @@ export default function TestAuth() {
   };
 
   const testLogin = async () => {
-    console.log("🧪 Testing login...");
     setResult("Testing login...");
 
     try {
@@ -37,7 +34,6 @@ export default function TestAuth() {
         password,
       });
 
-      console.log("Login result:", { data, error });
       setResult(`Login: ${error ? `Error: ${error.message}` : "Success!"}`);
     } catch (err) {
       console.error("Login catch:", err);
@@ -46,12 +42,10 @@ export default function TestAuth() {
   };
 
   const testConnection = async () => {
-    console.log("🧪 Testing connection...");
     setResult("Testing connection...");
 
     try {
       const { data, error } = await supabase.auth.getSession();
-      console.log("Connection test:", { data, error });
       setResult(
         `Connection: ${error ? `Error: ${error.message}` : "Success!"}`
       );

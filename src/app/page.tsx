@@ -1,23 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { UserCombobox } from "@/components/ui/combobox";
 
 
 export default function LandingPage() {
-  const [username, setUsername] = useState("");
-  const router = useRouter();
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (username.trim()) {
-      router.push(`/${username.trim()}`);
-    }
-  };
 
   return (
     <main className="relative min-h-screen w-full text-zinc-900 flex flex-col">
@@ -59,15 +48,7 @@ export default function LandingPage() {
 
         {/* Search User */}
         <div className="w-full max-w-md space-y-4">
-          <form onSubmit={handleSearch} className="flex gap-2">
-            <Input
-              placeholder="Find a portfolio (e.g. johndoe)"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="bg-white/80 backdrop-blur-sm"
-            />
-            <Button type="submit">Visit</Button>
-          </form>
+          <UserCombobox />
           <p className="text-sm text-zinc-500">
             Try searching for your friend&apos;s username to see their portfolio.
           </p>

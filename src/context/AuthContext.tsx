@@ -96,22 +96,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     username: string
   ) => {
     try {
-      console.log("🚀 Attempting signup with:", {
-        email,
-        username,
-        passwordLength: password.length,
-      });
-
-      // Pastikan supabase client tersedia
-      if (!supabase) {
-        console.error("❌ Supabase client not available");
-        return {
-          success: false,
-          error: { message: "Supabase client not initialized" } as AuthError,
-        };
-      }
-
-      console.log("🔄 Calling supabase.auth.signUp...");
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -121,8 +105,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           },
         },
       });
-
-      console.log("📊 Raw Supabase response:", { data, error });
 
       if (error) {
         console.error("❌ Signup error from Supabase:", error);
@@ -155,12 +137,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         if (profileError) {
           console.error("❌ Error creating profile:", profileError);
           // Don't fail the whole signup if profile creation fails, but log it
-        } else {
-          console.log("✅ Profile created successfully");
         }
       }
 
-      console.log("✅ Signup successful:", data);
       return { success: true, data };
     } catch (error) {
       console.error("💥 Unexpected error during sign up:", error);
@@ -169,11 +148,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    console.log("🔄 AuthContext signIn called with:", {
-      email,
-      passwordLength: password.length,
-    });
-
     try {
       // Pastikan supabase client tersedia
       if (!supabase) {
@@ -184,13 +158,10 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         };
       }
 
-      console.log("🚀 Calling supabase.auth.signInWithPassword...");
       const response = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
-      console.log("📊 Raw Supabase signIn response:", response);
 
       const { data, error } = response;
 
@@ -214,9 +185,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           error: { message: "No user data returned" } as AuthError,
         };
       }
-
-      console.log("✅ SignIn successful! User:", data.user.email);
-      console.log("✅ Session:", data.session ? "Present" : "Missing");
 
       return { success: true, data };
     } catch (error) {

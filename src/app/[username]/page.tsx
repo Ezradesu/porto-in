@@ -107,7 +107,7 @@ export default function Portfolio() {
 
                     {/* Mobile Menu Overlay */}
                     {isMobileMenuOpen && (
-                        <div className="absolute top-full left-0 right-0 z-50 mt-2 flex flex-col gap-4 rounded-lg border border-zinc-200 p-6 shadow-lg md:hidden">
+                        <div className="absolute top-full left-0 right-0 z-50 mt-2 flex flex-col gap-4 rounded-lg border bg-white border-zinc-200 p-6 shadow-lg md:hidden">
                             <Link
                                 href="#about"
                                 className="text-sm hover:text-zinc-500 transition-colors"
